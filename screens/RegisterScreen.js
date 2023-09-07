@@ -6,19 +6,48 @@ import {
     Image,
     KeyboardAvoidingView,
     TextInput,
-    Pressable
+    Pressable,
+    Alert
 } from 'react-native'
 import React, { useState } from 'react'
-import { useNavigation } from '@react-navigation/native'
 import Zocial from 'react-native-vector-icons/Zocial';
 import Feather from 'react-native-vector-icons/Feather';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { useNavigation } from '@react-navigation/native'
+import axios from 'axios';
 
 const RegisterScreen = () => {
     const [name, setName] = useState("");
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
     const navigation = useNavigation();
+
+    const handleRegister = () => {
+        const user = {
+            name: name,
+            email: email,
+            password: password,
+        }
+        // console.log('ok');
+        //send a post request to the backend API
+        axios
+            .post("http://192.168.29.108:8080/register", user)
+            .then((response) => {
+                console.log(response);
+                Alert.alert(
+                    "Registration Successfully",
+                    "You have Register Successfully"
+                );
+                setName("")
+                setEmail("")
+                setPassword("")
+            }).catch((error) => {
+                Alert.alert(
+                    "Registration Error", "an error occured during registration"
+                );
+                console.log("Registration Failed", error);
+            });
+    }
     return (
         <SafeAreaView style={styles.loginView}>
             <View>
@@ -121,14 +150,16 @@ const RegisterScreen = () => {
                 </View>
 
                 <View style={{ marginTop: 40 }} />
-                <Pressable style={{
-                    width: 200,
-                    backgroundColor: '#FEBE10',
-                    borderRadius: 6,
-                    marginLeft: 'auto',
-                    marginRight: 'auto',
-                    padding: 15
-                }}
+                <Pressable
+                    onPress={handleRegister}
+                    style={{
+                        width: 200,
+                        backgroundColor: '#FEBE10',
+                        borderRadius: 6,
+                        marginLeft: 'auto',
+                        marginRight: 'auto',
+                        padding: 15
+                    }}
                 >
                     <Text style={{ textAlign: 'center', color: 'white', fontSize: 16, fontWeight: 'bold' }}
                     >Register

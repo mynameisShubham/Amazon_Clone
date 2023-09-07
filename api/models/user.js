@@ -23,7 +23,7 @@ const userSchema = new mongoose.Schema({
     addresses: [
         {
             name: String,
-            mobile: String,
+            mobileNo: String,
             houseNo: String,
             street: String,
             landmark: String,
@@ -35,12 +35,12 @@ const userSchema = new mongoose.Schema({
     order: [
         {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "Order"
+            ref: "Order",
         }
     ],
     createdAt: {
-        typeof: Date,
-        default: Date.now
+        type: Date,
+        default: Date.now,
     }
 })
 const User = mongoose.model("User", userSchema);
