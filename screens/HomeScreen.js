@@ -18,6 +18,8 @@ import {SliderBox} from 'react-native-image-slider-box';
 import axios from 'axios';
 import ProductItems from '../components/ProductItems';
 import DropDownPicker from 'react-native-dropdown-picker';
+import {useNavigation} from '@react-navigation/native';
+import {useSelector} from 'react-redux';
 
 const HomeScreen = () => {
   const list = [
@@ -192,7 +194,7 @@ const HomeScreen = () => {
       size: '8GB RAM, 128GB Storage',
     },
   ];
-
+  const navigation = useNavigation();
   const [products, setProducts] = useState([]);
   const [open, setOpen] = useState(false);
   const [category, setCategory] = useState('jewelery');
@@ -216,11 +218,13 @@ const HomeScreen = () => {
   const onGenderOpen = useCallback(() => {
     setCompanyOpen(false);
   });
-  console.log('product', products);
+  // console.log('product', products);
+  // const cart = useSelector(state => state.cart.cart);
+  // console.log(cart);
   return (
     <SafeAreaView
       style={{
-        paddingTop: Platform.OS === 'android' ? 40 : 0,
+        // paddingTop: Platform.OS === 'android' ? 40 : 0,
         flex: 1,
         backgroundColor: 'white',
       }}>
@@ -362,6 +366,18 @@ const HomeScreen = () => {
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           {offers.map((item, index) => (
             <Pressable
+              onPress={() =>
+                navigation.navigate('Info', {
+                  id: item.id,
+                  title: item.title,
+                  price: item?.price,
+                  carouselImages: item.carouselImages,
+                  color: item?.color,
+                  size: item?.size,
+                  oldPrice: item?.oldPrice,
+                  item: item,
+                })
+              }
               style={{
                 marginVertical: 10,
                 alignItems: 'center',
@@ -438,9 +454,11 @@ const HomeScreen = () => {
             alignItems: 'center',
             flexWrap: 'wrap',
           }}>
-          {products?.map((item, index) => (
-            <ProductItems item={item} key={index} />
-          ))}
+          {products
+            ?.filter(item => item.category === category)
+            .map((item, index) => (
+              <ProductItems item={item} key={index} />
+            ))}
         </View>
       </ScrollView>
     </SafeAreaView>
